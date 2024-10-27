@@ -19,16 +19,32 @@ class AbTwigHelper extends AbstractExtension
     public function getFunctions(): array
     {
         return [
+            new TwigFunction('abExperiment', [$this, 'abExperiment']),
             new TwigFunction('abVariant', [$this, 'abVariant']),
             new TwigFunction('abUid', [$this, 'abUid']),
         ];
     }
 
-    public function abVariant(string $experiment): string
+    /**
+     * @return string The current experiment
+     */
+    public function abExperiment(): string
+    {
+        return $this->abService->getExperiment();
+    }
+
+    /**
+     * @param ?string $experiment The experiment to get the variant for (leave empty for the current experiment)
+     * @return string The variant for the current uid for the given experiment
+     */
+    public function abVariant(string $experiment = null): string
     {
         return $this->abService->getVariant($experiment);
     }
 
+    /**
+     * @return string The current uid
+     */
     public function abUid(): string
     {
         return $this->abService->getUid();

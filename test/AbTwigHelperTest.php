@@ -19,6 +19,29 @@ class AbTwigHelperTest extends TestCase
         ]
     ];
 
+    public function testAbExperiment(): void
+    {
+        $abService = new AbService($this->testExperiments);
+        $abService->setUid('test');
+
+        $abTwigHelper = new AbTwigHelper($abService);
+
+        $experiment = $abTwigHelper->abExperiment();
+
+        $this->assertIsString($experiment);
+        $this->assertEquals($this->testExperiment, $experiment);
+
+        $template = '{{ abExperiment() }}';
+
+        $loader = new \Twig\Loader\ArrayLoader([
+            'index' => $template,
+        ]);
+
+        $twig = new \Twig\Environment($loader);
+        $twig->addExtension($abTwigHelper);
+        $this->assertEquals($experiment, $twig->render('index'));
+    }
+
     public function testAbVariant(): void
     {
         $abService = new AbService($this->testExperiments);
