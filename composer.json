@@ -1,0 +1,32 @@
+{
+    "name": "dmt-software/ab-middleware",
+    "description": "ab testing middleware compatible with psr and symfony",
+    "type": "library",
+    "license": "MIT",
+    "php": ">=8.3",
+    "autoload": {
+        "psr-4": {
+            "DMT\\AbMiddleware\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DMT\\AbMiddleware\\": "test/"
+        }
+    },
+    "authors": [
+        {
+            "name": "lingonl",
+            "email": "lingo@de-mes.nl"
+        }
+    ],
+    "require": {
+        "psr/http-server-middleware": "^1.0",
+        "dflydev/fig-cookies": "^3.1",
+        "twig/twig": "^3.14"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "guzzlehttp/psr7": "*"
+    }
+}
