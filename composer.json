@@ -26,7 +26,7 @@
         "twig/twig": "^3.14"
     },
     "require-dev": {
-        "phpunit/phpunit": "*",
-        "guzzlehttp/psr7": "*"
+        "phpunit/phpunit": "^11.4",
+        "guzzlehttp/psr7": "^2.7"
     }
 }
