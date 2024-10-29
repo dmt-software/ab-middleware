@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace DMT\AbMiddleware;
@@ -11,8 +12,7 @@ class AbService
 
     public function __construct(
         protected array $experiments = []
-    )
-    {
+    ) {
         $this->setUid($this->generateUid());
     }
 

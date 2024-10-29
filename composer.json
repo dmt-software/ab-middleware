@@ -35,7 +35,7 @@
     "twig/twig": "If you want to use the twig helper"
   },
   "scripts": {
-    "phpcs": "phpcs src/ tests/ --standard=PSR12",
+    "phpcs": "vendor/bin/phpcs src/ test/ --standard=PSR12",
     "phpunit": "phpunit"
   }
 }

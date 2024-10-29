@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace DMT\AbMiddleware;
@@ -10,8 +11,8 @@ class AbTwigHelper extends AbstractExtension
 {
     public function __construct(
         protected AbService $abService
-    )
-    {}
+    ) {
+    }
 
     /**
      * @return array|TwigFunction[]

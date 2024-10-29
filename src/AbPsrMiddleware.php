@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace DMT\AbMiddleware;
@@ -14,18 +15,16 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class AbPsrMiddleware implements MiddlewareInterface
 {
-
     public function __construct(
         protected AbService $abService,
-        protected string    $cookieName = 'ab-uid',
-        protected string    $cookieExpires = '+1 month',
-        protected string    $cookieDomain = '',
-        protected string    $cookiePath = '/',
-        protected bool      $cookieSecure = false,
-        protected bool      $cookieHttpOnly = true,
-        protected string    $cookieSameSite = 'Lax'
-    )
-    {
+        protected string $cookieName = 'ab-uid',
+        protected string $cookieExpires = '+1 month',
+        protected string $cookieDomain = '',
+        protected string $cookiePath = '/',
+        protected bool $cookieSecure = false,
+        protected bool $cookieHttpOnly = true,
+        protected string $cookieSameSite = 'Lax'
+    ) {
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
