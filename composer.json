@@ -1,9 +1,8 @@
 {
     "name": "dmt-software/ab-middleware",
-    "description": "ab testing middleware compatible with psr and symfony",
+    "description": "ab testing middleware compatible with psr",
     "type": "library",
     "license": "MIT",
-    "php": ">=8.3",
     "autoload": {
         "psr-4": {
             "DMT\\AbMiddleware\\": "src/"
@@ -21,6 +20,7 @@
         }
     ],
     "require": {
+        "php": "^8.3",
         "psr/http-server-middleware": "^1.0",
         "dflydev/fig-cookies": "^3.1",
         "twig/twig": "^3.14"
