@@ -38,7 +38,7 @@ $experiments = [
 $service = new AbService($experiments);
 
 // instantiate the middleware
-$abMiddleware = new ABPsrMiddleware($service, 'ab-uid-cookie-name');
+$abMiddleware = new AbPsrMiddleware($service, 'ab-uid-cookie-name');
 
 // add the middleware to your middleware stack
 ```
