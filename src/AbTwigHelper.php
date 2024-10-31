@@ -34,7 +34,7 @@ class AbTwigHelper extends AbstractExtension
     {
         return $this->abService->getExperiment();
     }
-    
+
     /**
      * @return array The available experiments
      */
