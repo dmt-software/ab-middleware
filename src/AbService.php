@@ -58,6 +58,10 @@ class AbService
             $experiment = $this->getExperiment();
         }
 
+        if (preg_match('/^variant-(?<variant>.*)$/', $this->uid, $m)) {
+            return $m['variant'];
+        }
+
         return $this->chooseVariant(
             $this->getHash($this->uid, $experiment),
             $this->getVariants($experiment)

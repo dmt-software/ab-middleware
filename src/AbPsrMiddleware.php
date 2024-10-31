@@ -23,7 +23,8 @@ class AbPsrMiddleware implements MiddlewareInterface
         protected string $cookiePath = '/',
         protected bool $cookieSecure = false,
         protected bool $cookieHttpOnly = true,
-        protected string $cookieSameSite = 'Lax'
+        protected string $cookieSameSite = 'Lax',
+        protected string $overrideQueryParameter = 'ab-variant',
     ) {
     }
 
@@ -31,7 +32,9 @@ class AbPsrMiddleware implements MiddlewareInterface
     {
         $cookies = Cookies::fromRequest($request);
 
-        if ($cookies->has($this->cookieName)) {
+        if ($request->getQueryParams()[$this->overrideQueryParameter] ?? false) {
+            $this->abService->setUid($request->getQueryParams()[$this->overrideQueryParameter]);
+        } elseif ($cookies->has($this->cookieName)) {
             $this->abService->setUid($cookies->get($this->cookieName)->getValue());
         }
 
