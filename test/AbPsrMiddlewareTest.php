@@ -114,7 +114,7 @@ class AbPsrMiddlewareTest extends TestCase
             'GET',
             'https://example.com',
             [
-                Cookies::COOKIE_HEADER => 'ab-uid=' . $uid
+                Cookies::COOKIE_HEADER => 'ab-uid=' . $uid,
             ]
         );
 
@@ -176,7 +176,7 @@ class AbPsrMiddlewareTest extends TestCase
             'https://example.com'
         ))->withQueryParams(['ab-variant' => $uid]);
 
-        $this->assertArrayHasKey('ab-variant',$request->getQueryParams());
+        $this->assertArrayHasKey('ab-variant', $request->getQueryParams());
 
         $response = $middleware->process($request, $mockHandler);
 
