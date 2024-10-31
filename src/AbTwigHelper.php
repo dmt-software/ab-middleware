@@ -38,7 +38,7 @@ class AbTwigHelper extends AbstractExtension
      * @param ?string $experiment The experiment to get the variant for (leave empty for the current experiment)
      * @return string The variant for the current uid for the given experiment
      */
-    public function abVariant(string $experiment = null): string
+    public function abVariant(string $experiment): string
     {
         return $this->abService->getVariant($experiment);
     }

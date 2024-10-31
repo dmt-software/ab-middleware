@@ -52,7 +52,7 @@ class AbService
         return $this->experiments[$experiment];
     }
 
-    public function getVariant(string $experiment = null): string
+    public function getVariant(string $experiment): string
     {
         if (is_null($experiment)) {
             $experiment = $this->getExperiment();
@@ -61,7 +61,6 @@ class AbService
         if (preg_match('/^variant-(?<variant>.*)$/', $this->uid, $m)) {
             return $m['variant'];
         }
-
         return $this->chooseVariant(
             $this->getHash($this->uid, $experiment),
             $this->getVariants($experiment)
