@@ -21,6 +21,7 @@ class AbTwigHelper extends AbstractExtension
     {
         return [
             new TwigFunction('abExperiment', [$this, 'abExperiment']),
+            new TwigFunction('abExperiments', [$this, 'abExperiments']),
             new TwigFunction('abVariant', [$this, 'abVariant']),
             new TwigFunction('abUid', [$this, 'abUid']),
         ];
@@ -32,6 +33,14 @@ class AbTwigHelper extends AbstractExtension
     public function abExperiment(): string
     {
         return $this->abService->getExperiment();
+    }
+    
+    /**
+     * @return array The available experiments
+     */
+    public function abExperiments(): array
+    {
+        return $this->abService->getExperiments();
     }
 
     /**
