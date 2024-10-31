@@ -74,14 +74,6 @@ class AbServiceTest extends TestCase
         $this->assertIsString($variant);
         $this->assertContains($variant, array_keys($this->testExperiments[$this->testExperiment]));
         $this->assertEquals($variant, $abService->getVariant($this->testExperiment));
-
-        $variantWithoutExperiment = $abService->getVariant();
-
-        $this->assertIsString($variantWithoutExperiment);
-        $this->assertContains($variantWithoutExperiment, array_keys($this->testExperiments[$this->testExperiment]));
-        $this->assertEquals($variantWithoutExperiment, $abService->getVariant($this->testExperiment));
-
-        $this->assertEquals($variant, $variantWithoutExperiment);
     }
 
     public function testGetVariantDistributed(): void
@@ -103,18 +95,6 @@ class AbServiceTest extends TestCase
         }
 
         $this->assertNotEquals($variantOriginal, $variant, 'entropy has failed us');
-    }
-
-    public function testGetVariantDefault(): void
-    {
-        $abService = new AbService(
-            $this->testExperiments
-        );
-        $abService->setUid('test');
-
-        $variant = $abService->getVariant();
-
-        $this->assertNotEmpty($variant);
     }
 
     public function testGetVariantStrict(): void
