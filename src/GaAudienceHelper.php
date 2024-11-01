@@ -76,4 +76,23 @@ class GaAudienceHelper
 
         // create audience in Google Analytics
     }
+
+    /**
+     * fetch per experiment/variant conversions
+     *
+     * @return array[]
+     */
+    public function makeReport(): array
+    {
+        return [
+            'experiment1' => [
+                'variant1' => 100,
+                'variant2' => 200,
+            ],
+            'experiment2' => [
+                'variant1' => 300,
+                'variant2' => 400,
+            ],
+        ];
+    }
 }
