@@ -20,6 +20,9 @@ class AbService
 
     public function verifyConfig()
     {
+        if (empty($this->experiments)) {
+            throw new InvalidArgumentException("No experiments defined");
+        }
         foreach ($this->experiments as $experiment => $variants)
         {
             $sum = 0;
