@@ -11,7 +11,7 @@ class AbService
     protected string $uid;
 
     public function __construct(
-        /** array<int,array<string,array<string,int>>> $experiments */
+        /** array<int,array<string,array<string,float>>> $experiments */
         protected array $experiments = []
     ) {
         $this->setUid($this->generateUid());
