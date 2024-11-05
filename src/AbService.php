@@ -11,9 +11,29 @@ class AbService
     protected string $uid;
 
     public function __construct(
+        /** array<int,array<string,array<string,float>>> $experiments */
         protected array $experiments = []
     ) {
         $this->setUid($this->generateUid());
+    }
+
+    public function verifyConfig()
+    {
+        if (empty($this->experiments)) {
+            throw new InvalidArgumentException("No experiments defined");
+        }
+        foreach ($this->experiments as $experiment => $variants) {
+            $sum = 0;
+            foreach ($variants as $variant => $weight) {
+                if (!is_numeric($weight) || $weight < 0) {
+                    throw new InvalidArgumentException("Invalid weight for variant $variant in experiment $experiment");
+                }
+                $sum += $weight;
+            }
+            if ($sum !== 1.0) {
+                throw new InvalidArgumentException("Weights for experiment $experiment do not sum to 1.0");
+            }
+        }
     }
 
     public function generateUid(): string

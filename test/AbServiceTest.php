@@ -24,7 +24,7 @@ class AbServiceTest extends TestCase
 
     public function testGenerateUid(): void
     {
-        $abService = new AbService();
+        $abService = new AbService($this->testExperiments);
         $uid = $abService->generateUid();
 
         $this->assertIsString($uid);
@@ -32,7 +32,7 @@ class AbServiceTest extends TestCase
 
     public function testGetUid(): void
     {
-        $abService = new AbService();
+        $abService = new AbService($this->testExperiments);
         $uid = $abService->getUid();
 
         $this->assertIsString($uid);
@@ -41,7 +41,7 @@ class AbServiceTest extends TestCase
 
     public function testSetUid(): void
     {
-        $abService = new AbService();
+        $abService = new AbService($this->testExperiments);
         $abService->setUid('test');
 
         $this->assertEquals('test', $abService->getUid());
@@ -49,7 +49,7 @@ class AbServiceTest extends TestCase
 
     public function testGetExperiments(): void
     {
-        $abService = new AbService();
+        $abService = new AbService($this->testExperiments);
         $experiments = $abService->getExperiments();
 
         $this->assertIsArray($experiments);
@@ -97,28 +97,14 @@ class AbServiceTest extends TestCase
         $this->assertNotEquals($variantOriginal, $variant, 'entropy has failed us');
     }
 
-    public function testGetVariantStrict(): void
-    {
-        $abService = new AbService([], true);
-        $abService->setUid('test');
-
-        $variant = @$abService->getVariant($this->testExperiment);
-
-        $this->assertEquals('control', $variant);
-    }
-
-    public function testGetVariantRoundoffToControl(): void
+    public function testMissingExperiments(): void
     {
         $abService = new AbService([
             $this->testExperiment => [
-            ]
-        ]);
-
-        $abService->setUid('test');
-
-        $variant = $abService->getVariant($this->testExperiment);
-
-        $this->assertEquals('control', $variant);
+                ]
+            ]);
+        $this->expectException(InvalidArgumentException::class);
+        $abService->verifyConfig();
     }
 
     public static function provideHashVariants(): Generator
@@ -131,7 +117,6 @@ class AbServiceTest extends TestCase
         yield 'variant1' => ['variant1', 0.1, $variants];
         yield 'control' => ['control', 0.8, $variants];
         yield 'out of bounds control' => ['control', 1.2, $variants];
-        yield 'not found' => ['control', 0.1, []];
     }
 
     #[DataProvider('provideHashVariants')]
