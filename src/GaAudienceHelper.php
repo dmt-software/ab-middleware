@@ -20,9 +20,9 @@ class GaAudienceHelper
     public function __construct(
         private readonly AbService $abService,
         private readonly AnalyticsAdminServiceClient $client,
-        private readonly string $audiencePrefix = 'DOAB',
         private readonly string $accountId,
         private readonly array $propertyIds,
+        private readonly string $audiencePrefix = 'DOAB',
     ) {
     }
 
@@ -37,7 +37,7 @@ class GaAudienceHelper
 
         $audienceNames = [];
         foreach ($experiments as $experiment => $variants) {
-            foreach(array_keys($variants) as $variant) {
+            foreach (array_keys($variants) as $variant) {
                 $audienceNames[] = implode('-', [$this->audiencePrefix, $experiment, $variant]);
             }
         }
@@ -61,9 +61,9 @@ class GaAudienceHelper
         }
 
         $experimentAudienceNames = [];
-        
+
         foreach ($experiments as $experiment => $variants) {
-            foreach(array_keys($variants) as $variant) {
+            foreach (array_keys($variants) as $variant) {
                 $audienceName = implode('-', [$this->audiencePrefix, $experiment, $variant]);
 
                 $experimentAudienceNames[] = $audienceName;
@@ -76,7 +76,7 @@ class GaAudienceHelper
         }
         foreach ($this->propertyIds as $propertyId) {
             foreach ($audiences[$propertyId] as $audience) {
-                if (!in_array($audience['name'],$experimentAudienceNames)) {
+                if (!in_array($audience['name'], $experimentAudienceNames)) {
                     $this->archiveAudience($audience['id']);
                 }
             }
@@ -94,7 +94,7 @@ class GaAudienceHelper
             $audienceList =  $this->client->listAudiences('properties/' . $propertyId);
             foreach ($audienceList as $audience) {
                 $name = $audience->getDisplayName();
-                if(str_starts_with($name, $this->audiencePrefix)) {
+                if (str_starts_with($name, $this->audiencePrefix)) {
                     $audiences[$propertyId][] = ['name' => $name, 'id' => $audience->getName()];
                 }
             }
@@ -120,11 +120,11 @@ class GaAudienceHelper
         if (!str_starts_with($audienceName, $this->audiencePrefix)) {
             throw new InvalidArgumentException('Audience ID does not start with the configured prefix');
         }
-        
+
         $stringFilter = new StringFilter();
         $stringFilter->setValue($audienceName);
         $stringFilter->setMatchType(MatchType::EXACT);
-        
+
         $filter = new AudienceDimensionOrMetricFilter();
         $filter->setFieldName('experienceVariantId');
         $filter->setStringFilter($stringFilter);
