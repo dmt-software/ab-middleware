@@ -23,10 +23,10 @@ class AbService
         if (empty($this->experiments)) {
             throw new InvalidArgumentException("No experiments defined");
         }
-        foreach ($this->experiments as $experiment => $variants)
+        foreach ($this->experiments as $experiment => $variants) 
         {
             $sum = 0;
-            foreach ($variants as $variant => $weight)
+            foreach ($variants as $variant => $weight) 
             {
                 if (!is_numeric($weight) || $weight < 0) {
                     throw new InvalidArgumentException("Invalid weight for variant $variant in experiment $experiment");
