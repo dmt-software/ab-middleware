@@ -67,7 +67,7 @@ class AbTwigHelperTest extends TestCase
 
     public function testAbUid(): void
     {
-        $abService = new AbService();
+        $abService = new AbService($this->testExperiments);
         $abService->setUid('test');
 
         $abTwigHelper = new AbTwigHelper($abService);
