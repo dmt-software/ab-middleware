@@ -96,7 +96,7 @@ class AbServiceTest extends TestCase
 
         $this->assertNotEquals($variantOriginal, $variant, 'entropy has failed us');
     }
-    
+
     public function testMissingExperiments(): void
     {
         $this->expectException(InvalidArgumentException::class);
