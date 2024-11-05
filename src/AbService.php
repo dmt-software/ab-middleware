@@ -14,7 +14,6 @@ class AbService
         /** array<int,array<string,array<string,int>>> $experiments */
         protected array $experiments = []
     ) {
-        $this->verifyConfig();
         $this->setUid($this->generateUid());
     }
 

@@ -90,7 +90,9 @@ class GaAudienceHelper
      */
     public function getAudiences(): array
     {
+        $audiences = [];
         foreach ($this->propertyIds as $propertyId) {
+            $audiences[$propertyId] = [];
             $audienceList =  $this->client->listAudiences('properties/' . $propertyId);
             foreach ($audienceList as $audience) {
                 $name = $audience->getDisplayName();
