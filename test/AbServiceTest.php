@@ -99,11 +99,12 @@ class AbServiceTest extends TestCase
 
     public function testMissingExperiments(): void
     {
-        $this->expectException(InvalidArgumentException::class);
         $abService = new AbService([
             $this->testExperiment => [
-            ]
-        ]);
+                ]
+            ]);
+        $this->expectException(InvalidArgumentException::class);
+        $abService->verifyConfig();
     }
 
     public static function provideHashVariants(): Generator
