@@ -131,4 +131,49 @@ class AbServiceTest extends TestCase
         $this->assertIsString($variant);
         $this->assertEquals($expected, $variant);
     }
+
+    public static function provideTestResultData(): Generator
+    {
+        yield 'test1' => [
+            'countA' => 1000,
+            'countB' => 1000,
+            'conversionA' => 100,
+            'conversionB' => 200,
+            'uplift' => 100,
+            'zscore' => 6.3246,
+           ];
+        yield 'test2' => [
+            'countA' => 1000,
+            'countB' => 1000,
+            'conversionA' => 100,
+            'conversionB' => 150,
+            'uplift' => 50,
+            'zscore' => 3.3903,
+        ];
+        yield 'test3' => [
+            'countA' => 1000,
+            'countB' => 1000,
+            'conversionA' => 20,
+            'conversionB' => 22,
+            'uplift' => 10,
+            'zscore' => 0.3119,
+        ];
+        yield 'test4' => [
+            'countA' => 1000,
+            'countB' => 1000,
+            'conversionA' => 100,
+            'conversionB' => 80,
+            'uplift' => -20,
+            'zscore' => 1.5636,
+        ];
+    }
+
+    #[DataProvider('provideTestResultData')]
+    public function testGetTestSignficance($countA, $countB, $conversionA, $conversionB, $uplift, $zscore): void
+    {
+        $abService = new AbService($this->testExperiments);
+        $significance = $abService->getTestSignificance($countA, $countB, $conversionA, $conversionB);
+        $this->assertEquals($uplift, $significance['uplift']);
+        $this->assertEquals($zscore, $significance['z-score']);
+    }
 }
