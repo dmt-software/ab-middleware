@@ -111,7 +111,8 @@ class AbService
     }
 
     /**
-     * Get the significance of a test. Z-score > 1.64 = 90% confidence, Z-score > 1.96 = 95% confidence, Z-score > 2.58 = 99% confidence
+     * Get the significance of a test. Z-score > 1.64 = 90% confidence
+     * Z-score > 1.96 = 95% confidence, Z-score > 2.58 = 99% confidence
      * @param int $countA Total count of group A
      * @param int $countB Total count of group B
      * @param int $conversionsA Total conversions of group A
@@ -129,7 +130,7 @@ class AbService
         $data['z-score'] = round(abs($rateA - $rateB) / sqrt($varianceA + $varianceB), 4);
         $data['conversionA'] = $rateA;
         $data['conversionB'] = $rateB;
-        $data['uplift'] = round(($rateB - $rateA) / $rateA * 100,2);
+        $data['uplift'] = round(($rateB - $rateA) / $rateA * 100, 2);
 
         return $data;
     }
