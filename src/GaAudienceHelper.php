@@ -13,6 +13,11 @@ use Google\Analytics\Admin\V1alpha\AudienceFilterExpressionList;
 use Google\Analytics\Admin\V1alpha\AudienceFilterScope;
 use Google\Analytics\Admin\V1alpha\AudienceSimpleFilter;
 use Google\Analytics\Admin\V1alpha\SubpropertyEventFilterClause\FilterClauseType;
+use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\DateRange;
+use Google\Analytics\Data\V1beta\Dimension;
+use Google\Analytics\Data\V1beta\Metric;
+use Google\Analytics\Data\V1beta\RunReportRequest;
 use InvalidArgumentException;
 
 class GaAudienceHelper
@@ -20,6 +25,7 @@ class GaAudienceHelper
     public function __construct(
         private readonly AbService $abService,
         private readonly AnalyticsAdminServiceClient $client,
+        private readonly BetaAnalyticsDataClient $dataClient,
         private readonly string $accountId,
         private readonly array $propertyIds,
         private readonly string $audiencePrefix = 'DOAB',
@@ -101,7 +107,7 @@ class GaAudienceHelper
                 }
             }
         }
-        return $audiences ?? [];
+        return $audiences;
     }
 
     public function archiveAudience(string $audienceId): void
@@ -115,7 +121,7 @@ class GaAudienceHelper
     }
 
     /**
-     * @throws Google\ApiCore\ApiException
+     * @throws \Google\ApiCore\ApiException
      */
     public function createAudience(string $audienceName, string $propertyId): void
     {
@@ -159,7 +165,7 @@ class GaAudienceHelper
         $audience->setDescription('AB Test audience for ' . $audienceName);
         $audience->setFilterClauses([$filterClause]);
         $audience->setMembershipDurationDays(30);
-        $response = $this->client->createAudience('properties/' . $propertyId, $audience);
+        $this->client->createAudience('properties/' . $propertyId, $audience);
     }
 
     /**
@@ -169,15 +175,39 @@ class GaAudienceHelper
      */
     public function makeReport(): array
     {
-        return [
-            'experiment1' => [
-                'variant1' => 100,
-                'variant2' => 200,
-            ],
-            'experiment2' => [
-                'variant1' => 300,
-                'variant2' => 400,
-            ],
+        $dimensions = [
+            new Dimension(['name' => 'audienceName']),
         ];
+        $metrics = [
+            new Metric(['name' => 'keyEvents']),
+            new Metric(['name' => 'totalUsers']),
+        ];
+
+        $request = new RunReportRequest();
+
+        //@TODO support multiple properties
+        $request->setProperty('properties/394393083');
+        $request->setDimensions($dimensions);
+        $request->setMetrics($metrics);
+
+        //@TODO fix daterange
+        $dateRange = new DateRange();
+        $dateRange->setStartDate('2021-01-01');
+        $dateRange->setEndDate('2024-12-31');
+        $request->setDateRanges([$dateRange]);
+
+        $response = $this->dataClient->runReport($request);
+
+        $audiences = [];
+        foreach ($response->getRows() as $row) {
+            $audienceName = $row->getDimensionValues()[0]->getValue();
+            if (!str_starts_with($audienceName, $this->audiencePrefix)) {
+                continue;
+            }
+            $keyEvents = $row->getMetricValues()[0]->getValue();
+            $totalUsers = $row->getMetricValues()[1]->getValue();
+            $audiences[$audienceName] = ['keyEvents' => $keyEvents, 'totalUsers' => $totalUsers];
+        }
+        return $audiences;
     }
 }
