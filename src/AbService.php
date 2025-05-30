@@ -12,16 +12,27 @@ class AbService
 
     public function __construct(
         /** array<int,array<string,array<string,float>>> $experiments */
-        protected array $experiments = []
+        protected array $experiments = [],
+        protected ?string $activeExperiment = null,
+        protected bool $verifyConfig = false,
     ) {
         $this->setUid($this->generateUid());
+
+        if ($this->verifyConfig) {
+            $this->verifyConfig();
+        }
     }
 
-    public function verifyConfig()
+    public function verifyConfig(): void
     {
         if (empty($this->experiments)) {
             throw new InvalidArgumentException("No experiments defined");
         }
+
+        if (!empty($this->activeExperiment) && !array_key_exists($this->activeExperiment, $this->experiments)) {
+            throw new InvalidArgumentException("Active experiment '{$this->activeExperiment}' does not exist");
+        }
+
         foreach ($this->experiments as $experiment => $variants) {
             $sum = 0;
             foreach ($variants as $variant => $weight) {
@@ -58,7 +69,7 @@ class AbService
 
     public function getExperiment(): string
     {
-        return array_key_first($this->experiments);
+        return $this->activeExperiment ?? array_key_first($this->experiments);
     }
 
     public function getVariants(string $experiment): array
@@ -72,7 +83,7 @@ class AbService
         return $this->experiments[$experiment];
     }
 
-    public function getVariant(string $experiment): string
+    public function getVariant(?string $experiment): string
     {
         if (is_null($experiment)) {
             $experiment = $this->getExperiment();
