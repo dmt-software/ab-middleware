@@ -83,12 +83,8 @@ class AbService
         return $this->experiments[$experiment];
     }
 
-    public function getVariant(?string $experiment): string
+    public function getVariant(string $experiment): string
     {
-        if (is_null($experiment)) {
-            $experiment = $this->getExperiment();
-        }
-
         if (preg_match('/^variant-(?<variant>.*)$/', $this->uid, $m)) {
             return $m['variant'];
         }
