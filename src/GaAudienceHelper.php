@@ -134,7 +134,7 @@ class GaAudienceHelper
         $stringFilter->setMatchType(MatchType::EXACT);
 
         $filter = new AudienceDimensionOrMetricFilter();
-        $filter->setFieldName('experienceVariantId');
+        $filter->setFieldName('customEvent:experienceVariantId');
         $filter->setStringFilter($stringFilter);
 
         $filterExpression = new AudienceFilterExpression();
