@@ -12,9 +12,15 @@ class AbService
 
     public function __construct(
         /** array<int,array<string,array<string,float>>> $experiments */
-        protected array $experiments = []
+        protected array $experiments = [],
+        protected ?string $activeExperiment = null,
+        protected bool $verifyConfig = false,
     ) {
         $this->setUid($this->generateUid());
+
+        if ($this->verifyConfig) {
+            $this->verifyConfig();
+        }
     }
 
     public function verifyConfig(): void
@@ -22,6 +28,11 @@ class AbService
         if (empty($this->experiments)) {
             throw new InvalidArgumentException("No experiments defined");
         }
+
+        if (!empty($this->activeExperiment) && !array_key_exists($this->activeExperiment, $this->experiments)) {
+            throw new InvalidArgumentException("Active experiment '{$this->activeExperiment}' does not exist");
+        }
+
         foreach ($this->experiments as $experiment => $variants) {
             $sum = 0;
             foreach ($variants as $variant => $weight) {
@@ -59,7 +70,7 @@ class AbService
 
     public function getExperiment(): string
     {
-        return array_key_first($this->experiments);
+        return $this->activeExperiment ?? array_key_first($this->experiments);
     }
 
     public function getVariants(string $experiment): array
@@ -130,6 +141,31 @@ class AbService
         $data['varianceA'] = $varianceA;
         $data['varianceB'] = $varianceB;
         $data['uplift'] = round(($rateB - $rateA) / $rateA * 100, 2);
+        return $data;
+    }
+
+    /**
+     * Get the significance of a test. Z-score > 1.64 = 90% confidence
+     * Z-score > 1.96 = 95% confidence, Z-score > 2.58 = 99% confidence
+     * @param int $countA Total count of group A
+     * @param int $countB Total count of group B
+     * @param int $conversionsA Total conversions of group A
+     * @param int $conversionsB Total conversions of group B
+     * @return array array of test metrics
+     */
+    public function getTestSignificance(int $countA, int $countB, int $conversionsA, int $conversionsB): array
+    {
+        $rateA = $conversionsA / $countA;
+        $rateB = $conversionsB / $countB;
+
+        $varianceA = $rateA * (1 - $rateA) / $countA;
+        $varianceB = $rateB * (1 - $rateB) / $countB;
+
+        $data['z-score'] = round(abs($rateA - $rateB) / sqrt($varianceA + $varianceB), 4);
+        $data['conversionA'] = $rateA;
+        $data['conversionB'] = $rateB;
+        $data['uplift'] = round(($rateB - $rateA) / $rateA * 100, 2);
+
         return $data;
     }
 }
