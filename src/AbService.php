@@ -130,7 +130,6 @@ class AbService
         $data['varianceA'] = $varianceA;
         $data['varianceB'] = $varianceB;
         $data['uplift'] = round(($rateB - $rateA) / $rateA * 100, 2);
-        //@TODO return an object rather than an array
         return $data;
     }
 }

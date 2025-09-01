@@ -173,7 +173,7 @@ class GaAudienceHelper
      *
      * @return array[]
      */
-    public function makeReport(): array
+    public function makeReport(string $propertyId = '394393083'): array
     {
         $dimensions = [
             new Dimension(['name' => 'audienceName']),
@@ -185,15 +185,13 @@ class GaAudienceHelper
 
         $request = new RunReportRequest();
 
-        //@TODO support multiple properties
-        $request->setProperty('properties/394393083');
+        $request->setProperty('properties/' . $propertyId);
         $request->setDimensions($dimensions);
         $request->setMetrics($metrics);
 
-        //@TODO fix daterange
         $dateRange = new DateRange();
-        $dateRange->setStartDate('2021-01-01');
-        $dateRange->setEndDate('2024-12-31');
+        $dateRange->setStartDate('30daysAgo');
+        $dateRange->setEndDate('today');
         $request->setDateRanges([$dateRange]);
 
         $response = $this->dataClient->runReport($request);

@@ -47,10 +47,6 @@ class GaAudienceHelperTest extends TestCase
     {
         $audiences = $this->gah->getAudiences();
         $this->assertIsArray($audiences);
-        //$this->assertArrayHasKey('394393083', $audiences);
-        //$this->assertArrayHasKey('name', $audiences['394393083'][0]);
-        //$this->assertArrayHasKey('id', $audiences['394393083'][0]);
-        var_dump($audiences);
     }
 
     public function testSynchronizeAudiences()
