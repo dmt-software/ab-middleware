@@ -41,7 +41,8 @@ class AbService
                 }
                 $sum += $weight;
             }
-            if ($sum !== 1.0) {
+            $tolerance = 0.00001;
+            if (abs($sum - 1.0) > $tolerance) {
                 throw new InvalidArgumentException("Weights for experiment $experiment do not sum to 1.0");
             }
         }
@@ -102,19 +103,19 @@ class AbService
     public function chooseVariant(float $hash, array $variants): string
     {
         $sum = 0;
-        $choosenVariant = 'control';
+        $chosenVariant = 'control';
 
         foreach ($variants as $variant => $weight) {
             $sum += $weight;
 
             if ($hash <= $sum) {
-                $choosenVariant = $variant;
+                $chosenVariant = $variant;
                 break;
             }
         }
 
         // any rounding errors will default to control
-        return $choosenVariant;
+        return $chosenVariant;
     }
 
     /**
@@ -137,8 +138,9 @@ class AbService
         $data['z-score'] = round(abs($rateA - $rateB) / sqrt($varianceA + $varianceB), 4);
         $data['conversionA'] = $rateA;
         $data['conversionB'] = $rateB;
+        $data['varianceA'] = $varianceA;
+        $data['varianceB'] = $varianceB;
         $data['uplift'] = round(($rateB - $rateA) / $rateA * 100, 2);
-
         return $data;
     }
 }
