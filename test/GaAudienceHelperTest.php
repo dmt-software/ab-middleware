@@ -20,6 +20,11 @@ class GaAudienceHelperTest extends TestCase
     public function setUp(): void
     {
         $path = __DIR__ . '/../data/google/auth.json';
+
+        if (!file_exists($path)) {
+            $this->markTestSkipped('Skipped because of missing google auth.json');
+        }
+
         putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $path);
 
         $experiments = [
