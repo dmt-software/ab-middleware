@@ -117,20 +117,24 @@ class AbService
 
     public function chooseVariant(float $hash, array $variants): string
     {
-        $sum = 0;
-        $chosenVariant = 'control';
+        $sum = 0.0;
+        $variant = null;
 
-        foreach ($variants as $variant => $weight) {
-            $sum += $weight;
+        $names = array_keys($variants);
+        $weights = array_values($variants);
 
-            if ($hash <= $sum) {
-                $chosenVariant = $variant;
+        for ($i = 0; $i < count($names) -1; $i++) {
+            $sum += $weights[$i];
+
+            if ($hash < $sum) {
+                $variant = $names[$i];
                 break;
             }
         }
 
-        // any rounding errors will default to control
-        return $chosenVariant;
+        $variant ??= end($names);
+
+        return $variant;
     }
 
     /**

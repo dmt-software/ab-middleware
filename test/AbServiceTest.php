@@ -95,6 +95,59 @@ class AbServiceTest extends TestCase
      */
     public function testGetVariantDistributed(): void
     {
+        $this->markTestSkipped("takes a while");
+        
+        $iterations = 1000000;
+        $delta = $iterations / 500; // 0.2% difference
+
+        $experiment = '7111-experiment';
+        $variants = [
+            'control' => 0.7,
+            'a' => 0.1,
+            'b' => 0.1,
+            'c' => 0.1,
+        ];
+
+        $buckets = [
+            'control' => 0,
+            'a' => 0,
+            'b' => 0,
+            'c' => 0,
+        ];
+        $hashSum = 0;
+
+        $experiments = [
+            $experiment => $variants,
+        ];
+
+        $abService = new AbService($experiments, $experiment);
+        $abService->setUid('test');
+
+        $variantOriginal = $abService->getVariant($this->testActiveExperiment);
+
+        $this->assertIsString($variantOriginal);
+
+        for ($i = 0; $i < $iterations; $i++) {
+            $uid = $abService->generateUid();
+            $hash = $abService->getHash($uid, $experiment);
+            $variant = $abService->chooseVariant($hash, $variants);
+
+            $hashSum += $hash;
+            $buckets[$variant]++;
+        }
+
+        $this->assertEqualsWithDelta(0.5, $hashSum / $iterations, 0.01, "hash sum mismatch");
+
+        $this->assertEqualsWithDelta($buckets['control'] / 7, $buckets['a'], $delta, "bucket a mismatch");
+        $this->assertEqualsWithDelta($buckets['control'] / 7, $buckets['b'], $delta, "bucket b mismatch");
+        $this->assertEqualsWithDelta($buckets['control'] / 7, $buckets['c'], $delta, "bucket c mismatch");
+    }
+
+    /**
+     * @throws RandomException
+     */
+    public function testGetVariantDistributions(): void
+    {
         $abService = new AbService($this->testExperiments, $this->testActiveExperiment);
         $abService->setUid('test');
 
