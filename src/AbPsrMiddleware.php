@@ -35,7 +35,12 @@ class AbPsrMiddleware implements MiddlewareInterface
         if ($request->getQueryParams()[$this->overrideQueryParameter] ?? false) {
             $this->abService->setUid($request->getQueryParams()[$this->overrideQueryParameter]);
         } elseif ($cookies->has($this->cookieName)) {
-            $this->abService->setUid($cookies->get($this->cookieName)->getValue());
+            $uid = $cookies->get($this->cookieName)->getValue();
+
+            // old uniqid == 13 characters, new random_bytes == 16 characters
+            if (strlen($uid) == 16) {
+                $this->abService->setUid($uid);
+            }
         }
 
         $uid = $this->abService->getUid();

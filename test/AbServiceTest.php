@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Random\RandomException;
 
 #[CoversClass(AbService::class)]
 class AbServiceTest extends TestCase
@@ -89,6 +90,9 @@ class AbServiceTest extends TestCase
         $this->assertEquals($variant, $abService->getVariant($this->testActiveExperiment));
     }
 
+    /**
+     * @throws RandomException
+     */
     public function testGetVariantDistributed(): void
     {
         $abService = new AbService($this->testExperiments, $this->testActiveExperiment);
@@ -99,7 +103,7 @@ class AbServiceTest extends TestCase
         $this->assertIsString($variantOriginal);
 
         for ($i = 0; $i < 100; $i++) {
-            $abService->setUid(uniqid());
+            $abService->setUid($abService->generateUid());
             $variant = $abService->getVariant($this->testActiveExperiment);
 
             if ($variant !== $variantOriginal) {

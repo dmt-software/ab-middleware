@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace DMT\AbMiddleware;
 
 use InvalidArgumentException;
+use Random\RandomException;
 
 class AbService
 {
     protected string $uid;
 
+    /**
+     * @throws RandomException
+     */
     public function __construct(
         /** array<int,array<string,array<string,float>>> $experiments */
         protected array $experiments = [],
@@ -30,7 +34,7 @@ class AbService
         }
 
         if (!empty($this->activeExperiment) && !array_key_exists($this->activeExperiment, $this->experiments)) {
-            throw new InvalidArgumentException("Active experiment '{$this->activeExperiment}' does not exist");
+            throw new InvalidArgumentException("Active experiment '$this->activeExperiment' does not exist");
         }
 
         foreach ($this->experiments as $experiment => $variants) {
@@ -48,9 +52,12 @@ class AbService
         }
     }
 
+    /**
+     * @throws RandomException
+     */
     public function generateUid(): string
     {
-        return uniqid();
+        return bin2hex(random_bytes(8));
     }
 
     public function getUid(): string
@@ -102,7 +109,10 @@ class AbService
 
     public function getHash(string $uid, string $experiment): float
     {
-        return (crc32($uid . $experiment) % 1000) / 1000;
+        $hex = substr(hash('sha256', $uid . $experiment), 0, 16);
+        $int = hexdec($hex);
+
+        return $int / 0xFFFFFFFFFFFFFFFF;
     }
 
     public function chooseVariant(float $hash, array $variants): string
