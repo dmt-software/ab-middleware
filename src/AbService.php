@@ -124,7 +124,7 @@ class AbService
         $weights = array_values($variants);
         $nameCount = count($names);
 
-        for ($i = 0; $i < $nameCount -1; $i++) {
+        for ($i = 0; $i < $nameCount - 1; $i++) {
             $sum += $weights[$i];
 
             if ($hash < $sum) {

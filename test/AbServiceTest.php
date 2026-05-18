@@ -96,7 +96,7 @@ class AbServiceTest extends TestCase
     public function testGetVariantDistributed(): void
     {
         $this->markTestSkipped("takes a while");
-        
+
         $iterations = 1000000;
         $delta = $iterations / 500; // 0.2% difference
 
