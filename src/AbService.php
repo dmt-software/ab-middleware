@@ -112,7 +112,7 @@ class AbService
         $hex = substr(hash('sha256', $uid . $experiment), 0, 15);
         $int = hexdec($hex);
 
-        return $int / 2**60;
+        return $int / 2 ** 60;
     }
 
     public function chooseVariant(float $hash, array $variants): string
