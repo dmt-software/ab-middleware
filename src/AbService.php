@@ -109,10 +109,10 @@ class AbService
 
     public function getHash(string $uid, string $experiment): float
     {
-        $hex = substr(hash('sha256', $uid . $experiment), 0, 16);
+        $hex = substr(hash('sha256', $uid . $experiment), 0, 15);
         $int = hexdec($hex);
 
-        return $int / 0xFFFFFFFFFFFFFFFF;
+        return $int / 2 ** 60;
     }
 
     public function chooseVariant(float $hash, array $variants): string
@@ -122,8 +122,9 @@ class AbService
 
         $names = array_keys($variants);
         $weights = array_values($variants);
+        $nameCount = count($names);
 
-        for ($i = 0; $i < count($names) -1; $i++) {
+        for ($i = 0; $i < $nameCount - 1; $i++) {
             $sum += $weights[$i];
 
             if ($hash < $sum) {
