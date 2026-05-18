@@ -112,7 +112,7 @@ class AbService
         $hex = substr(hash('sha256', $uid . $experiment), 0, 15);
         $int = hexdec($hex);
 
-        return $int / 2**60;
+        return $int / 2**60-1;
     }
 
     public function chooseVariant(float $hash, array $variants): string
@@ -127,7 +127,7 @@ class AbService
         for ($i = 0; $i < $nameCount -1; $i++) {
             $sum += $weights[$i];
 
-            if ($hash < $sum) {
+            if ($hash <= $sum) {
                 $variant = $names[$i];
                 break;
             }
