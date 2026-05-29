@@ -37,10 +37,7 @@ class AbPsrMiddleware implements MiddlewareInterface
         } elseif ($cookies->has($this->cookieName)) {
             $uid = $cookies->get($this->cookieName)->getValue();
 
-            // old uniqid == 13 characters, new random_bytes == 16 characters
-            if (strlen($uid) == 16) {
-                $this->abService->setUid($uid);
-            }
+            $this->abService->setUid($uid);
         }
 
         $uid = $this->abService->getUid();
